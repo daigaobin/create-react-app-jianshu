@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
+import {Link} from 'react-router-dom';
+import { connect } from 'react-redux';
 import { CSSTransition } from 'react-transition-group';
+import { actionCreators } from './store';
 
 import {
     HeaderWrapper,
@@ -13,7 +16,7 @@ import {
 } from './style';
 
 class Header extends Component {
-    constructor(props) {
+    /* constructor(props) {
         super(props);
         this.state = {
             focused: false
@@ -21,25 +24,36 @@ class Header extends Component {
 
         this.handleInputFocus = this.handleInputFocus.bind(this);
         this.handleInputBlur = this.handleInputBlur.bind(this);
-    }
+    } */
 
     render() {
+        const {
+            focused,
+            handleInputFocus,
+            handleInputBlur,
+            list,
+            login,
+            logout
+        } = this.props;
+
         return (
             <HeaderWrapper>
                 <Nav>
-                    <NavItem className='left'><Logo></Logo></NavItem>
+                    <NavItem className='left'>
+                        <Link to="/"><Logo></Logo></Link>
+                    </NavItem>
                     <NavItem className='left active'>首页</NavItem>
                     <NavItem className='left'>下载App</NavItem>
                     <SearchWrapper>
-                        <CSSTransition in={this.state.focused} timeout={200} classNames="slide">
-                            <NavSearch className={this.state.focused
+                        <CSSTransition in={focused} timeout={200} classNames="slide">
+                            <NavSearch className={focused
                                 ? 'focused'
                                 : ''}
-                                onFocus={() => this.handleInputFocus()}
-                                onBlur={() => this.handleInputBlur()}>
+                                onFocus={() => handleInputFocus()}
+                                onBlur={() => handleInputBlur()}>
                             </NavSearch>
                         </CSSTransition>
-                        <i className={this.state.focused
+                        <i className={focused
                             ? 'focused iconfont zoom'
                             : 'iconfont zoom'}>
                             &#xe614;
@@ -64,7 +78,7 @@ class Header extends Component {
         )
     }
 
-    handleInputFocus() {
+    /* handleInputFocus() {
         this.setState({
             focused: true
         });
@@ -74,7 +88,24 @@ class Header extends Component {
         this.setState({
             focused: false
         });
+    } */
+}
+
+const mapStateToProps = (state) => {
+    return {
+        focused: state.getIn(['header', 'focused']),
     }
 }
 
-export default Header;
+const mapDispathToProps = (dispatch) => {
+    return {
+        handleInputFocus() {
+            dispatch(actionCreators.searchFocus());
+        },
+        handleInputBlur() {
+            dispatch(actionCreators.searchBlur());
+        },
+    }
+}
+
+export default connect(mapStateToProps, mapDispathToProps)(Header);
