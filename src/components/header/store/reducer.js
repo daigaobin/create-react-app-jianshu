@@ -6,6 +6,7 @@ const defaultState = fromJS({
 	mouseIn: false,
 	list: [],
 	page: 1,
+	pageSize: 10,
 	totalPage: 1
 });
 
